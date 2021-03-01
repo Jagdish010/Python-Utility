@@ -2,50 +2,50 @@
 
 from __future__ import unicode_literals
 import re, os
-# import frappe, requests
+import requests
 
-# def check_site_state():
-# 	session = create_log_session()
-# 	url = "http://localhost:84/api/method/custom_clearance.custom_clearance.doctype.live_site.live_site.site_state"
-# 	headers = {'content-type': 'application/x-www-form-urlencoded' }
-# 	data = {
-# 		'domain': 'localhost',
-# 		'port': '1000'
-# 	}
+def check_site_state():
+	session = create_log_session()
+	url = ""
+	headers = {'content-type': 'application/x-www-form-urlencoded' }
+	data = {
+		'domain': 'localhost',
+		'port': '1000'
+	}
 	
-# 	state_dict = {
-# 		"Active": 1,
-# 		"Stop": 0,
-# 		"hold": 0
-# 	}
+	state_dict = {
+		"Active": 1,
+		"Stop": 0,
+		"hold": 0
+	}
 
-# 	status_flag = 0
+	status_flag = 0
 
-# 	try:
-# 		response = session.get(url, data=data, headers=headers)
-# 		_result = response.json()
-# 		print (str(_result))
-# 		if 'message' in _result:
-# 			status = _result.get('message')
-# 			if status: status_flag = state_dict.get(status[0]['status'])
-# 		else:
-# 			print ('Failed') 
+	try:
+		response = session.get(url, data=data, headers=headers)
+		_result = response.json()
+		print (str(_result))
+		if 'message' in _result:
+			status = _result.get('message')
+			if status: status_flag = state_dict.get(status[0]['status'])
+		else:
+			print ('Failed')
 	
-# 	except Exception as e:
-# 		print (str(e))
-# 		raise
+	except Exception as e:
+		print (str(e))
+		raise
 	
-# 	return status_flag
+	return status_flag
 
 
-# def create_log_session():
-# 	session = requests.Session()
-# 	session.post("http://localhost:84/api/method/login",
-# 		data={ "usr": "administrator",
-# 			"pwd": "qwedsa@123" }
-# 	)
-# 	# Login
-# 	return session
+def create_log_session():
+	session = requests.Session()
+	session.post("http://localhost:84/api/method/login",
+		data={ "usr": "username",
+			"pwd": "userpwd" }
+	)
+	# Login
+	return session
 
 def nginx_state(alive = 0):
 	comment_flag = 0
@@ -82,7 +82,7 @@ def nginx_state(alive = 0):
 		
 		config_file.close()
 	except IOError:
-		print ('The file nginx.conf was not found. Are you sure you custom_stop.py is in bench directory?')
+		print ('The file nginx.conf was not found. Are you sure you custom_stop.py is in nginx directory?')
 	finally:
 		os.system("sudo service nginx restart")
 
@@ -102,21 +102,21 @@ def nginx_state(alive = 0):
 			print ("failed to STOP")
 
 
-def move_to_bench():
+def move_to_nginx():
 	d = os.getcwd()
 	i = 0
-	while(not os.path.basename(d) == "frappe-bench"):
+	while(not os.path.basename(d) == "nginx-location"):
 		os.chdir("..")
 		d = os.getcwd()
 		i += 1
 		if i == 10: break
 
 
-def bench_stop_launch():
-	# move_to_bench()
-	os.chdir("frappe-bench")
+def nginx_stop_launch():
+	# move_to_nginx()
+	os.chdir("nginx-location")
 	# nginx_state(check_site_state())
 	nginx_state(1)
 
 if __name__ == '__main__':
-	bench_stop_launch()
+	nginx_stop_launch()
